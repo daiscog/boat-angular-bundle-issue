@@ -1,0 +1,64 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>example</artifactId>
+  <version>0.1.0</version>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-sources</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <mkdir dir="target/unbundled"/>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.backbase.oss</groupId>
+        <artifactId>boat-maven-plugin</artifactId>
+        <version>0.14.2</version>
+        <executions>
+          <execution>
+            <id>generate-from-unbundled-spec</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>src/main/resources/api.yaml</inputSpec>
+              <output>target/unbundled</output>
+              <generatorName>boat-angular</generatorName>
+              <additionalProperties>foundationVersion=6.13.1,ngVersion=11,npmName=@example/example,npmVersion=0.1.0,withMocks=true</additionalProperties>
+              <bundleSpecs>true</bundleSpecs>
+              <writeDebugFiles>true</writeDebugFiles>
+            </configuration>
+          </execution>
+          <execution>
+            <id>generate-from-bundled-spec</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>target/unbundled/openapi-bundled.yaml</inputSpec>
+              <output>target/bundled</output>
+              <generatorName>boat-angular</generatorName>
+              <additionalProperties>foundationVersion=6.13.1,ngVersion=11,npmName=@example/example,npmVersion=0.1.0,withMocks=true</additionalProperties>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+
